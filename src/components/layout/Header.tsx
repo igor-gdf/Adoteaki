@@ -87,6 +87,7 @@ export function Header() {
     redirectPath?: string
   ) => {
     setRoleDropdownOpen(false);
+    setMobileMenuOpen(false);
     const ok = await quickLoginAs(demoEmail, demoPass);
     if (ok && redirectPath) {
       router.push(redirectPath);
@@ -112,12 +113,12 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-40 w-full bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 transition-colors">
-        {/* Top institutional bar */}
-        <div className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200/80 dark:border-zinc-800/80 text-xs">
+        {/* Top institutional bar (Desktop >= md only to prevent mobile horizontal overflow) */}
+        <div className="hidden md:block bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200/80 dark:border-zinc-800/80 text-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-8 flex items-center justify-between text-zinc-600 dark:text-zinc-400">
-            <div className="flex items-center gap-2 font-mono text-[11px]">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-600" />
-              <span>
+            <div className="flex items-center gap-2 font-mono text-[11px] truncate pr-4">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+              <span className="truncate">
                 {locale === 'pt-BR'
                   ? 'SISTEMA PÚBLICO DE ADOÇÃO & AUDITORIA CONTÁBIL • RECEITA FEDERAL / MÓDULO-11'
                   : 'PUBLIC ADOPTION & FINANCIAL AUDIT SYSTEM • VERIFIED CNPJ REGISTRY'}
@@ -125,7 +126,7 @@ export function Header() {
             </div>
 
             {/* RBAC Quick Demo Switcher for instant evaluation */}
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
@@ -214,10 +215,10 @@ export function Header() {
           </div>
         </div>
 
-        {/* Main Header Bar */}
+        {/* Main Header Bar: Only Logo + Menu Button on mobile (< md) */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex items-center gap-6 lg:gap-8 min-w-0">
+            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
               <div className="w-9 h-9 rounded bg-brand-700 dark:bg-brand-600 text-white flex items-center justify-center font-serif font-bold text-lg tracking-tight">
                 A
               </div>
@@ -231,7 +232,8 @@ export function Header() {
               </div>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Navigation (>= md) */}
+            <nav className="hidden md:flex items-center gap-1 flex-wrap">
               {navItems.map((item) => {
                 const isActive =
                   item.href === '/'
@@ -241,7 +243,7 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                    className={`px-2.5 lg:px-3 py-2 rounded text-xs lg:text-sm font-medium transition-colors whitespace-nowrap ${
                       isActive
                         ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-white font-semibold'
                         : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
@@ -254,8 +256,8 @@ export function Header() {
             </nav>
           </div>
 
-          {/* Right Controls: Language, Theme, Favorites, Auth */}
-          <div className="flex items-center gap-2">
+          {/* Desktop Right Controls (>= md): Language, Theme, Favorites, Auth */}
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             {/* Language Switcher */}
             <button
               type="button"
@@ -289,7 +291,7 @@ export function Header() {
             {/* Favorites indicator */}
             <Link
               href="/ongs#catalogo"
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
               title={t.nav.favorites}
             >
               <Heart
@@ -305,7 +307,7 @@ export function Header() {
             {/* User Session / Login Button */}
             {user ? (
               <div className="flex items-center gap-2 pl-1">
-                <div className="hidden sm:flex flex-col text-right">
+                <div className="hidden lg:flex flex-col text-right">
                   <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
                     {user.name}
                   </span>
@@ -319,7 +321,7 @@ export function Header() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-zinc-300 dark:border-zinc-700 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span className="hidden md:inline">{t.nav.logout}</span>
+                  <span>{t.nav.logout}</span>
                 </button>
               </div>
             ) : (
@@ -335,31 +337,206 @@ export function Header() {
                 <span>{t.nav.login}</span>
               </button>
             )}
-
-            {/* Mobile Hamburger */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
+
+          {/* Mobile Hamburger Button (< md) */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-expanded={mobileMenuOpen}
+            aria-label={
+              mobileMenuOpen
+                ? locale === 'pt-BR'
+                  ? 'Fechar menu de navegação'
+                  : 'Close navigation menu'
+                : locale === 'pt-BR'
+                ? 'Abrir menu de navegação'
+                : 'Open navigation menu'
+            }
+            className="md:hidden p-2.5 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors shrink-0"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Accessible Mobile Navigation Drawer (< md) */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 px-4 pt-2 pb-4 space-y-1">
-            {navItems.map((item) => (
+          <div className="md:hidden bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 px-4 pt-3 pb-6 space-y-5 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            {/* Primary Navigation Links */}
+            <nav className="space-y-1">
+              {navItems.map((item) => {
+                const isActive =
+                  item.href === '/'
+                    ? pathname === '/'
+                    : pathname?.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block px-3 py-2.5 rounded text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-white font-semibold'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+
               <Link
-                key={item.href}
-                href={item.href}
+                href="/ongs#catalogo"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                className="flex items-center justify-between px-3 py-2.5 rounded text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
               >
-                {item.label}
+                <span className="flex items-center gap-2">
+                  <Heart
+                    className={`w-4 h-4 ${
+                      favoriteIds.length > 0
+                        ? 'fill-rose-600 text-rose-600'
+                        : 'text-zinc-500'
+                    }`}
+                  />
+                  <span>{t.nav.favorites}</span>
+                </span>
+                <span className="font-mono text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">
+                  {favoriteIds.length}
+                </span>
               </Link>
-            ))}
+            </nav>
+
+            {/* Preferences: Language & Theme Switchers */}
+            <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setLocale(locale === 'pt-BR' ? 'en' : 'pt-BR')}
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded border border-zinc-200 dark:border-zinc-800 text-xs font-mono font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+              >
+                <Globe className="w-4 h-4 text-zinc-500" />
+                <span>{locale === 'pt-BR' ? 'Idioma: PT-BR' : 'Lang: EN-US'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+              >
+                {theme === 'light' ? (
+                  <>
+                    <Moon className="w-4 h-4 text-zinc-600" />
+                    <span>{locale === 'pt-BR' ? 'Modo Escuro' : 'Dark Mode'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Sun className="w-4 h-4 text-amber-400" />
+                    <span>{locale === 'pt-BR' ? 'Modo Claro' : 'Light Mode'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Authentication Controls */}
+            <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
+              {user ? (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                      {user.name}
+                    </div>
+                    <div className="text-xs font-mono uppercase text-emerald-700 dark:text-emerald-400">
+                      {t.roles[user.role]}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded border border-zinc-300 dark:border-zinc-700 text-xs font-semibold text-zinc-700 dark:text-zinc-300 shrink-0"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{t.nav.logout}</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setAuthTab('login');
+                      setAuthModalOpen(true);
+                    }}
+                    className="w-full py-2.5 px-4 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold flex items-center justify-center gap-1.5"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>{t.nav.login}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setAuthTab('register');
+                      setAuthModalOpen(true);
+                    }}
+                    className="w-full py-2.5 px-4 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-semibold"
+                  >
+                    {t.nav.signup}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile RBAC Quick Demo Switcher */}
+            <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-2">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+                {t.nav.roleSwitch}
+              </div>
+              <div className="grid grid-cols-1 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleQuickDemoRole(
+                      'contato@pataspaulistas.org.br',
+                      'ong123',
+                      '/dashboard/finances'
+                    )
+                  }
+                  className="w-full text-left px-3 py-2 rounded border border-zinc-200 dark:border-zinc-800 text-xs flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  <Building2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200 truncate">
+                    ONG: Instituto Patas Paulistas
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleQuickDemoRole('admin@adoteaki.org.br', 'admin123', '/admin')
+                  }
+                  className="w-full text-left px-3 py-2 rounded border border-zinc-200 dark:border-zinc-800 text-xs flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  <ShieldCheck className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0" />
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200 truncate">
+                    Admin: Governança & Auditoria
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleQuickDemoRole('apoiador@adoteaki.org.br', 'apoiador123')
+                  }
+                  className="w-full text-left px-3 py-2 rounded border border-zinc-200 dark:border-zinc-800 text-xs flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  <Heart className="w-4 h-4 text-rose-700 dark:text-rose-400 shrink-0" />
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200 truncate">
+                    Apoiador / Público
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </header>
@@ -490,12 +667,12 @@ export function Header() {
                     await quickLoginAs('contato@pataspaulistas.org.br', 'ong123');
                     setAuthModalOpen(false);
                   }}
-                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between"
+                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between gap-2"
                 >
                   <span className="font-medium text-zinc-800 dark:text-zinc-200">
                     ONG (Patas Paulistas SP)
                   </span>
-                  <span className="font-mono text-[11px] text-zinc-500">
+                  <span className="font-mono text-[11px] text-zinc-500 truncate">
                     contato@pataspaulistas.org.br
                   </span>
                 </button>
@@ -505,12 +682,12 @@ export function Header() {
                     await quickLoginAs('admin@adoteaki.org.br', 'admin123');
                     setAuthModalOpen(false);
                   }}
-                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between"
+                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between gap-2"
                 >
                   <span className="font-medium text-zinc-800 dark:text-zinc-200">
                     Admin (Auditora Chefe)
                   </span>
-                  <span className="font-mono text-[11px] text-zinc-500">
+                  <span className="font-mono text-[11px] text-zinc-500 truncate">
                     admin@adoteaki.org.br
                   </span>
                 </button>
@@ -520,12 +697,12 @@ export function Header() {
                     await quickLoginAs('apoiador@adoteaki.org.br', 'apoiador123');
                     setAuthModalOpen(false);
                   }}
-                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between"
+                  className="text-left px-2.5 py-1.5 rounded border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-between gap-2"
                 >
                   <span className="font-medium text-zinc-800 dark:text-zinc-200">
                     Apoiador / Público
                   </span>
-                  <span className="font-mono text-[11px] text-zinc-500">
+                  <span className="font-mono text-[11px] text-zinc-500 truncate">
                     apoiador@adoteaki.org.br
                   </span>
                 </button>

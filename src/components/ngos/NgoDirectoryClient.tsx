@@ -111,7 +111,7 @@ export function NgoDirectoryClient({
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-950 min-h-screen py-10">
+    <div className="bg-white dark:bg-zinc-950 min-h-screen py-8 sm:py-10 overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header + Direct CTA "Cadastrar ONG" */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8 mb-8">
@@ -129,7 +129,7 @@ export function NgoDirectoryClient({
 
           <Link
             href="/ongs/cadastrar"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-semibold tracking-wide transition-colors shrink-0"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-semibold tracking-wide transition-colors shrink-0"
           >
             <Building2 className="w-4 h-4" />
             <span>{t.directory.registerCta}</span>
@@ -137,10 +137,10 @@ export function NgoDirectoryClient({
         </div>
 
         {/* Multi-Dimensional Filter Bar */}
-        <div className="p-5 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/80 mb-8">
+        <div className="p-4 sm:p-5 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/80 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Search by Name / CNPJ */}
-            <div className="lg:col-span-2">
+            <div className="sm:col-span-2 lg:col-span-2">
               <label className="block font-mono text-[11px] uppercase text-zinc-600 dark:text-zinc-400 mb-1.5">
                 {t.directory.searchLabel}
               </label>
@@ -214,7 +214,7 @@ export function NgoDirectoryClient({
 
           {/* City Secondary Filter + Reset */}
           <div className="mt-4 pt-3 border-t border-zinc-200/80 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
               <input
                 type="text"
                 value={cityQuery}
@@ -222,7 +222,7 @@ export function NgoDirectoryClient({
                 placeholder={
                   locale === 'pt-BR' ? 'Filtrar por município...' : 'Filter by city...'
                 }
-                className="px-3 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 w-56"
+                className="w-full sm:w-56 px-3 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
               />
               <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400">
                 <strong>{filteredNgos.length}</strong> {t.directory.resultsCount}
@@ -232,7 +232,7 @@ export function NgoDirectoryClient({
             <button
               type="button"
               onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white self-start sm:self-auto"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{t.directory.clearFilters}</span>
@@ -242,7 +242,7 @@ export function NgoDirectoryClient({
 
         {/* NGO Results List */}
         {filteredNgos.length === 0 ? (
-          <div className="p-12 rounded border border-zinc-200 dark:border-zinc-800 text-center space-y-3">
+          <div className="p-8 sm:p-12 rounded border border-zinc-200 dark:border-zinc-800 text-center space-y-3">
             <p className="font-serif text-lg text-zinc-800 dark:text-zinc-200">
               {locale === 'pt-BR'
                 ? 'Nenhuma organização encontrada para os filtros selecionados.'
@@ -261,18 +261,20 @@ export function NgoDirectoryClient({
             {filteredNgos.map((ngo) => (
               <div
                 key={ngo.id}
-                className="p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                className="p-5 sm:p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
               >
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
-                  <div className="space-y-3 flex-1">
+                  <div className="space-y-3 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-mono text-xs font-semibold">
-                        <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                        <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
                         {ngo.city} - {ngo.state}
                       </span>
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-mono text-xs">
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        {t.directory.verifiedCnpj}: {ngo.cnpj}
+                        <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                        <span>
+                          {t.directory.verifiedCnpj}: {ngo.cnpj}
+                        </span>
                       </span>
                       <span className="font-mono text-xs text-zinc-500">
                         {sizeLabels[ngo.size] || ngo.size}
@@ -282,11 +284,11 @@ export function NgoDirectoryClient({
                     <div>
                       <Link
                         href={`/ongs/${ngo.slug}`}
-                        className="font-serif font-bold text-2xl text-zinc-900 dark:text-zinc-100 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+                        className="font-serif font-bold text-xl sm:text-2xl text-zinc-900 dark:text-zinc-100 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors block"
                       >
                         {ngo.tradeName}
                       </Link>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                         {ngo.legalName} • Fundada em {ngo.foundationYear}
                       </p>
                     </div>
@@ -311,7 +313,7 @@ export function NgoDirectoryClient({
                   </div>
 
                   {/* Financial & Adoption Snapshot Box */}
-                  <div className="lg:w-80 shrink-0 p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-950 space-y-3">
+                  <div className="w-full lg:w-80 shrink-0 p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-950 space-y-3">
                     <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2">
                       <span className="font-mono text-[11px] uppercase text-zinc-500">
                         {t.directory.transparencyIndex}
@@ -322,19 +324,19 @@ export function NgoDirectoryClient({
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-zinc-500 block text-[11px]">
                           {locale === 'pt-BR' ? 'Receitas (12m)' : 'Revenues (12m)'}
                         </span>
-                        <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
+                        <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100 break-words">
                           {formatCurrencyBRL(ngo.totalRevenue, locale)}
                         </span>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-zinc-500 block text-[11px]">
                           {locale === 'pt-BR' ? 'Despesas (12m)' : 'Expenses (12m)'}
                         </span>
-                        <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
+                        <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100 break-words">
                           {formatCurrencyBRL(ngo.totalExpenses, locale)}
                         </span>
                       </div>
@@ -352,14 +354,14 @@ export function NgoDirectoryClient({
                     <div className="pt-1 flex flex-col gap-2">
                       <Link
                         href={`/ongs/${ngo.slug}`}
-                        className="w-full py-2 px-3 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
+                        className="w-full py-2.5 px-3 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
                       >
                         <span>{t.directory.viewProfile}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                       <Link
                         href={`/ongs/${ngo.slug}?tab=finances`}
-                        className="w-full py-1.5 px-3 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium flex items-center justify-center gap-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                        className="w-full py-2 px-3 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium flex items-center justify-center gap-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                       >
                         <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                         <span>
@@ -393,7 +395,7 @@ export function NgoDirectoryClient({
             <button
               type="button"
               onClick={() => setOnlyFavorites(!onlyFavorites)}
-              className={`px-3.5 py-2 rounded border text-xs font-semibold transition-colors ${
+              className={`w-full sm:w-auto px-3.5 py-2.5 sm:py-2 rounded border text-xs font-semibold transition-colors ${
                 onlyFavorites
                   ? 'bg-rose-50 dark:bg-rose-950 border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200'
                   : 'border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300'
@@ -416,7 +418,7 @@ export function NgoDirectoryClient({
                 : 'You have not saved any favorite animals yet.'}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAnimals.map((animal) => (
                 <AnimalCard key={animal.id} animal={animal} showNgoBadge />
               ))}

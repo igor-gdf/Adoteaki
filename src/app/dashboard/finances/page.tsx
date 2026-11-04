@@ -748,8 +748,8 @@ function DashboardFinancesContent() {
                     </span>
                   </div>
 
-                  <div className="overflow-x-auto max-h-96">
-                    <table className="w-full text-left border-collapse text-xs">
+                  <div className="w-full overflow-x-auto max-h-96">
+                    <table className="w-full min-w-[680px] text-left border-collapse text-xs">
                       <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 sticky top-0 font-mono uppercase text-[11px] text-zinc-500">
                         <tr>
                           <th className="py-3 px-4">Mês</th>
@@ -1060,8 +1060,8 @@ function DashboardFinancesContent() {
                 </form>
 
                 {/* Existing Animals Table */}
-                <div className="rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
-                  <table className="w-full text-left border-collapse text-xs">
+                <div className="w-full overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                  <table className="w-full min-w-[640px] text-left border-collapse text-xs">
                     <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 font-mono uppercase text-[11px] text-zinc-500">
                       <tr>
                         <th className="py-3 px-4">Animal</th>

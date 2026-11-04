@@ -120,10 +120,10 @@ export function AnimalCard({
 
   return (
     <>
-      <article className="group rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden flex flex-col justify-between transition-colors hover:border-zinc-300 dark:hover:border-zinc-700">
+      <article className="group rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden flex flex-col justify-between transition-colors hover:border-zinc-300 dark:hover:border-zinc-700 h-full">
         <div>
-          {/* Image Container */}
-          <div className="relative h-56 w-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+          {/* Consistent 4:3 Image Aspect Ratio Wrapper */}
+          <div className="relative aspect-[4/3] w-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={animal.photoUrl}
@@ -132,7 +132,7 @@ export function AnimalCard({
             />
 
             {/* Top Badges */}
-            <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+            <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pr-10">
               <span className="px-2 py-0.5 rounded bg-white/95 dark:bg-zinc-950/90 text-zinc-900 dark:text-zinc-100 font-mono text-[11px] font-semibold border border-zinc-200 dark:border-zinc-800">
                 {labels[animal.species] || animal.species} • {formatAge(animal.ageMonths)}
               </span>
@@ -164,7 +164,7 @@ export function AnimalCard({
               <h3 className="font-serif font-bold text-lg text-zinc-900 dark:text-zinc-100">
                 {animal.name}
               </h3>
-              <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+              <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 shrink-0">
                 {labels[animal.size] || animal.size}
               </span>
             </div>
@@ -178,8 +178,8 @@ export function AnimalCard({
                 href={`/ongs/${animal.ngo.slug}`}
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:underline mb-3"
               >
-                <MapPin className="w-3.5 h-3.5" />
-                <span>
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">
                   {animal.ngo.tradeName} ({animal.ngo.city}/{animal.ngo.state})
                 </span>
               </Link>
@@ -230,7 +230,7 @@ export function AnimalCard({
           </div>
         </div>
 
-        {/* Footer Action */}
+        {/* Footer Action with padded container so button never touches card edges */}
         <div className="px-5 pb-5 pt-2">
           <button
             type="button"
@@ -250,7 +250,7 @@ export function AnimalCard({
       {/* Adoption Inquiry Modal */}
       {inquireOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md max-w-lg w-full p-6 shadow-xl my-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md max-w-lg w-full p-5 sm:p-6 shadow-xl my-8">
             <div className="flex items-start justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3 mb-4">
               <div>
                 <span className="text-[11px] font-mono uppercase text-emerald-700 dark:text-emerald-400 font-semibold">
@@ -377,7 +377,7 @@ export function AnimalCard({
                     </select>
                   </div>
 
-                  <label className="flex items-center gap-2 pt-5 cursor-pointer">
+                  <label className="flex items-center gap-2 sm:pt-5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={safeScreens}
@@ -389,7 +389,7 @@ export function AnimalCard({
                     </span>
                   </label>
 
-                  <label className="flex items-center gap-2 pt-5 cursor-pointer">
+                  <label className="flex items-center gap-2 sm:pt-5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={hasOtherPets}
@@ -422,18 +422,18 @@ export function AnimalCard({
                   />
                 </div>
 
-                <div className="pt-2 flex items-center justify-end gap-2">
+                <div className="pt-2 flex flex-col-reverse sm:flex-row sm:items-center justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setInquireOpen(false)}
-                    className="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                    className="w-full sm:w-auto px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
                   >
                     {locale === 'pt-BR' ? 'Cancelar' : 'Cancel'}
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded bg-brand-700 hover:bg-brand-800 text-white font-semibold"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded bg-brand-700 hover:bg-brand-800 text-white font-semibold"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>

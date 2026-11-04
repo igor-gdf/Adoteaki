@@ -195,12 +195,12 @@ export default function AdminGovernancePage() {
 
         {/* Summary Metrics */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-              <span className="font-mono text-[11px] uppercase text-zinc-500 block">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase text-zinc-500 block">
                 ONGs Cadastradas
               </span>
-              <span className="font-mono font-bold text-2xl text-zinc-900 dark:text-zinc-100">
+              <span className="font-mono font-bold text-lg sm:text-2xl text-zinc-900 dark:text-zinc-100">
                 {stats.totalNgos}
               </span>
               <span className="block text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5 font-mono">
@@ -209,10 +209,10 @@ export default function AdminGovernancePage() {
             </div>
 
             <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-              <span className="font-mono text-[11px] uppercase text-zinc-500 block">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase text-zinc-500 block">
                 Usuários Globais
               </span>
-              <span className="font-mono font-bold text-2xl text-zinc-900 dark:text-zinc-100">
+              <span className="font-mono font-bold text-lg sm:text-2xl text-zinc-900 dark:text-zinc-100">
                 {stats.totalUsers}
               </span>
               <span className="block text-[11px] text-zinc-500 mt-0.5 font-mono">
@@ -221,10 +221,10 @@ export default function AdminGovernancePage() {
             </div>
 
             <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-              <span className="font-mono text-[11px] uppercase text-zinc-500 block">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase text-zinc-500 block">
                 Animais Catalogados
               </span>
-              <span className="font-mono font-bold text-2xl text-zinc-900 dark:text-zinc-100">
+              <span className="font-mono font-bold text-lg sm:text-2xl text-zinc-900 dark:text-zinc-100">
                 {stats.totalAnimals}
               </span>
               <span className="block text-[11px] text-zinc-500 mt-0.5 font-mono">
@@ -233,10 +233,10 @@ export default function AdminGovernancePage() {
             </div>
 
             <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-              <span className="font-mono text-[11px] uppercase text-zinc-500 block">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase text-zinc-500 block">
                 Eventos de Auditoria
               </span>
-              <span className="font-mono font-bold text-2xl text-emerald-700 dark:text-emerald-400">
+              <span className="font-mono font-bold text-lg sm:text-2xl text-emerald-700 dark:text-emerald-400">
                 {auditLogs.length}
               </span>
               <span className="block text-[11px] text-zinc-500 mt-0.5 font-mono">
@@ -308,8 +308,8 @@ export default function AdminGovernancePage() {
           <>
             {/* TAB 1: NGO APPROVALS & FINANCIAL REPORTS */}
             {tab === 'ngos' && (
-              <div className="rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
+              <div className="w-full overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                <table className="w-full min-w-[780px] text-left border-collapse text-xs">
                   <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 font-mono uppercase text-[11px] text-zinc-500">
                     <tr>
                       <th className="py-3.5 px-4">Organização / CNPJ</th>
@@ -406,8 +406,8 @@ export default function AdminGovernancePage() {
 
             {/* TAB 2: GLOBAL USERS MANAGEMENT */}
             {tab === 'users' && (
-              <div className="rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
+              <div className="w-full overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                <table className="w-full min-w-[680px] text-left border-collapse text-xs">
                   <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 font-mono uppercase text-[11px] text-zinc-500">
                     <tr>
                       <th className="py-3.5 px-4">Nome</th>
@@ -478,8 +478,8 @@ export default function AdminGovernancePage() {
 
             {/* TAB 3: PLATFORM AUDIT LOG */}
             {tab === 'audit' && (
-              <div className="rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
+              <div className="w-full overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                <table className="w-full min-w-[680px] text-left border-collapse text-xs">
                   <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 font-mono uppercase text-[11px] text-zinc-500">
                     <tr>
                       <th className="py-3.5 px-4">Data / Hora</th>

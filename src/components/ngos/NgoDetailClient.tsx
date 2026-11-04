@@ -112,7 +112,7 @@ export function NgoDetailClient({
   )}&layer=mapnik&marker=${ngo.latitude},${ngo.longitude}`;
 
   return (
-    <div className="bg-white dark:bg-zinc-950 min-h-screen py-10">
+    <div className="bg-white dark:bg-zinc-950 min-h-screen py-8 sm:py-10 overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb */}
         <div className="mb-6">
@@ -126,16 +126,18 @@ export function NgoDetailClient({
         </div>
 
         {/* Institutional Header Banner */}
-        <div className="p-6 sm:p-8 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 mb-8">
+        <div className="p-5 sm:p-8 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 mb-8">
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
-            <div className="space-y-3 max-w-3xl">
+            <div className="space-y-3 max-w-3xl min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-mono text-xs font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  CNPJ {ngo.cnpj} ({t.directory.verifiedCnpj})
+                  <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                  <span>
+                    CNPJ {ngo.cnpj} ({t.directory.verifiedCnpj})
+                  </span>
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-mono text-xs">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
                   {ngo.city} / {ngo.state}
                 </span>
                 <span className="font-mono text-xs text-zinc-500">
@@ -143,7 +145,7 @@ export function NgoDetailClient({
                 </span>
               </div>
 
-              <h1 className="font-serif font-bold text-3xl sm:text-4xl text-zinc-950 dark:text-zinc-50">
+              <h1 className="font-serif font-bold text-2xl sm:text-4xl text-zinc-950 dark:text-zinc-50">
                 {ngo.tradeName}
               </h1>
               <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
@@ -166,8 +168,8 @@ export function NgoDetailClient({
             </div>
 
             {/* Right Key Score & Edit Portal Link */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-3 shrink-0">
-              <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 text-right">
+            <div className="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-between gap-3 shrink-0">
+              <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 sm:text-right">
                 <span className="block font-mono text-[10px] uppercase text-zinc-500">
                   {t.directory.transparencyIndex}
                 </span>
@@ -182,7 +184,7 @@ export function NgoDetailClient({
 
               <Link
                 href={`/dashboard/finances?ngoId=${ngo.id}`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded border border-zinc-300 dark:border-zinc-700 text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded border border-zinc-300 dark:border-zinc-700 text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                 <span>
@@ -195,17 +197,17 @@ export function NgoDetailClient({
           </div>
 
           {/* Primary Navigation Tabs */}
-          <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-wrap gap-2">
+          <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setActiveTab('overview')}
-              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded text-xs sm:text-sm font-semibold transition-colors ${
+              className={`inline-flex items-center justify-center sm:justify-start gap-2 px-4 py-2.5 rounded text-xs sm:text-sm font-semibold transition-colors ${
                 activeTab === 'overview'
                   ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900'
                   : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
             >
-              <PawPrint className="w-4 h-4" />
+              <PawPrint className="w-4 h-4 shrink-0" />
               <span>
                 {t.ngoDetail.institutionalTab} ({availableAnimals.length})
               </span>
@@ -214,13 +216,13 @@ export function NgoDetailClient({
             <button
               type="button"
               onClick={() => setActiveTab('finances')}
-              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded text-xs sm:text-sm font-semibold transition-colors ${
+              className={`inline-flex items-center justify-center sm:justify-start gap-2 px-4 py-2.5 rounded text-xs sm:text-sm font-semibold transition-colors ${
                 activeTab === 'finances'
                   ? 'bg-emerald-700 text-white'
                   : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
             >
-              <FileSpreadsheet className="w-4 h-4" />
+              <FileSpreadsheet className="w-4 h-4 shrink-0" />
               <span>{t.ngoDetail.financialTab}</span>
             </button>
           </div>
@@ -233,7 +235,7 @@ export function NgoDetailClient({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left 2 Columns: About, Mission & Direct Donation */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-4">
+                <div className="p-5 sm:p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-4">
                   <div>
                     <h2 className="font-serif font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">
                       {t.ngoDetail.aboutHeading}
@@ -254,17 +256,17 @@ export function NgoDetailClient({
                 </div>
 
                 {/* PIX & Bank Account Auditable Box */}
-                <div className="p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900">
+                <div className="p-5 sm:p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-[11px] uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
+                    <div className="min-w-0">
+                      <span className="font-mono text-[11px] uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold block">
                         {t.ngoDetail.pixHeading}
                       </span>
-                      <div className="font-mono font-bold text-base text-zinc-900 dark:text-zinc-100 mt-1">
+                      <div className="font-mono font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 mt-1 break-words">
                         PIX (CNPJ): {ngo.pixKey || ngo.cnpj}
                       </div>
                       {ngo.bankInfo && (
-                        <p className="font-mono text-xs text-zinc-500 mt-0.5">
+                        <p className="font-mono text-xs text-zinc-500 mt-0.5 break-words">
                           {ngo.bankInfo}
                         </p>
                       )}
@@ -273,7 +275,7 @@ export function NgoDetailClient({
                     <button
                       type="button"
                       onClick={handleCopyPix}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold shrink-0"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold shrink-0"
                     >
                       {copiedPix ? (
                         <>
@@ -292,7 +294,7 @@ export function NgoDetailClient({
               </div>
 
               {/* Right Column: Contact Channels & Interactive Map Pin */}
-              <div className="p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-4">
+              <div className="p-5 sm:p-6 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-4">
                 <h2 className="font-serif font-bold text-lg text-zinc-900 dark:text-zinc-100">
                   {t.ngoDetail.contactHeading}
                 </h2>
@@ -306,12 +308,12 @@ export function NgoDetailClient({
                     <Phone className="w-4 h-4 text-zinc-400 shrink-0" />
                     <span className="font-mono">{ngo.phone}</span>
                   </div>
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <Mail className="w-4 h-4 text-zinc-400 shrink-0" />
-                    <span className="font-mono">{ngo.email}</span>
+                    <span className="font-mono truncate">{ngo.email}</span>
                   </div>
                   {ngo.website && (
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <Globe className="w-4 h-4 text-zinc-400 shrink-0" />
                       <a
                         href={ngo.website}
@@ -327,9 +329,9 @@ export function NgoDetailClient({
 
                 {/* Interactive Map Pin View */}
                 <div className="pt-2">
-                  <div className="text-[11px] font-mono text-zinc-500 mb-1.5 flex items-center justify-between">
-                    <span>{t.ngoDetail.locationPinLabel}</span>
-                    <span>
+                  <div className="text-[11px] font-mono text-zinc-500 mb-1.5 flex items-center justify-between gap-2">
+                    <span className="truncate">{t.ngoDetail.locationPinLabel}</span>
+                    <span className="shrink-0">
                       {ngo.latitude.toFixed(4)}, {ngo.longitude.toFixed(4)}
                     </span>
                   </div>
@@ -357,7 +359,7 @@ export function NgoDetailClient({
               </div>
 
               {/* Animal Filters */}
-              <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900 grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+              <div className="p-4 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
                 <div>
                   <label className="block font-mono text-[10px] uppercase text-zinc-500 mb-1">
                     {t.ngoDetail.filterSpecies}
@@ -365,7 +367,7 @@ export function NgoDetailClient({
                   <select
                     value={speciesFilter}
                     onChange={(e) => setSpeciesFilter(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
+                    className="w-full px-2.5 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
                   >
                     <option value="ALL">{t.ngoDetail.all}</option>
                     <option value="DOG">{t.animalLabels.DOG}</option>
@@ -380,7 +382,7 @@ export function NgoDetailClient({
                   <select
                     value={ageFilter}
                     onChange={(e) => setAgeFilter(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
+                    className="w-full px-2.5 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
                   >
                     <option value="ALL">{t.ngoDetail.all}</option>
                     <option value="PUPPY">{t.animalLabels.PUPPY}</option>
@@ -396,7 +398,7 @@ export function NgoDetailClient({
                   <select
                     value={sizeFilter}
                     onChange={(e) => setSizeFilter(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
+                    className="w-full px-2.5 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
                   >
                     <option value="ALL">{t.ngoDetail.all}</option>
                     <option value="SMALL">{t.animalLabels.SMALL}</option>
@@ -412,7 +414,7 @@ export function NgoDetailClient({
                   <select
                     value={temperamentFilter}
                     onChange={(e) => setTemperamentFilter(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
+                    className="w-full px-2.5 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
                   >
                     <option value="ALL">{t.ngoDetail.all}</option>
                     <option value="DOCILE">{t.animalLabels.DOCILE}</option>
@@ -422,14 +424,14 @@ export function NgoDetailClient({
                   </select>
                 </div>
 
-                <div>
+                <div className="sm:col-span-2 lg:col-span-1">
                   <label className="block font-mono text-[10px] uppercase text-zinc-500 mb-1">
                     {t.ngoDetail.filterHealth}
                   </label>
                   <select
                     value={healthFilter}
                     onChange={(e) => setHealthFilter(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
+                    className="w-full px-2.5 py-2 sm:py-1.5 text-xs rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950"
                   >
                     <option value="ALL">{t.ngoDetail.all}</option>
                     <option value="VACCINATED">{t.ngoDetail.vaccinatedOnly}</option>
@@ -445,7 +447,7 @@ export function NgoDetailClient({
                     : 'No animals match the selected filters in this NGO.'}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {availableAnimals.map((animal) => (
                     <AnimalCard key={animal.id} animal={animal} />
                   ))}
