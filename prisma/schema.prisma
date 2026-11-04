@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(cuid())
+  email        String            @unique
+  name         String
+  passwordHash String
+  role         String            @default("SUPPORTER") // ADMIN | NGO | SUPPORTER
+  status       String            @default("ACTIVE")    // ACTIVE | SUSPENDED
+  phone        String?
+  city         String?
+  state        String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  ngo          NGO?
+  inquiries    AdoptionInquiry[]
+  favorites    Favorite[]
+  auditLogs    AuditLog[]
+}
+
+model NGO {
+  id                 String            @id @default(cuid())
+  slug               String            @unique
+  userId             String?           @unique
+  user               User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  legalName          String
+  tradeName          String
+  cnpj               String            @unique
+  foundationYear     Int               @default(2018)
+  state              String            // e.g. SP, PR, BA
+  city               String
+  address            String
+  latitude           Float             @default(-23.5505)
+  longitude          Float             @default(-46.6333)
+  size               String            @default("MEDIUM") // SMALL | MEDIUM | LARGE
+  causeTags          String            // CSV tags: e.g. "CAES,GATOS, IDOSOS, RESGATE_EMERGENCIAL, CASTRACAO"
+  descriptionPt      String
+  descriptionEn      String
+  missionPt          String
+  missionEn          String
+  email              String
+  phone              String
+  website            String?
+  instagram          String?
+  pixKey             String?
+  bankInfo           String?
+  status             String            @default("APPROVED") // APPROVED | PENDING | SUSPENDED
+  verifiedScore      Int               @default(94)
+  initialBalance     Float             @default(0)
+  totalAdoptions     Int               @default(0)
+  financialUpdatedAt DateTime          @default(now())
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  animals            Animal[]
+  financialEntries   FinancialEntry[]
+  inquiries          AdoptionInquiry[]
+}
+
+model Animal {
+  id            String            @id @default(cuid())
+  ngoId         String
+  ngo           NGO               @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  name          String
+  species       String            // DOG | CAT | OTHER
+  breed         String
+  ageMonths     Int               // Age in months
+  ageGroup      String            // PUPPY | ADULT | SENIOR
+  size          String            // SMALL | MEDIUM | LARGE
+  gender        String            // MALE | FEMALE
+  temperament   String            // CSV e.g. "DOCILE,SOCIABLE,CALM"
+  vaccinated    Boolean           @default(true)
+  neutered      Boolean           @default(true)
+  microchipped  Boolean           @default(false)
+  specialNeeds  Boolean           @default(false)
+  descriptionPt String
+  descriptionEn String
+  photoUrl      String
+  status        String            @default("AVAILABLE") // AVAILABLE | ADOPTED | PENDING
+  featured      Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  inquiries     AdoptionInquiry[]
+  favorites     Favorite[]
+}
+
+model FinancialEntry {
+  id          String   @id @default(cuid())
+  ngoId       String
+  ngo         NGO      @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  type        String   // REVENUE | EXPENSE
+  category    String   // REVENUE: DONATIONS | GRANTS | EVENTS | PARTNERSHIPS
+                       // EXPENSE: VETERINARY | FOOD | FACILITY | ADMINISTRATION | RESCUE_OPS
+  titlePt     String
+  titleEn     String
+  amount      Float
+  month       String   // YYYY-MM format, e.g. "2026-10"
+  entryDate   DateTime @default(now())
+  documentRef String?  // Invoice/receipt ID for audit transparency
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AdoptionInquiry {
+  id             String   @id @default(cuid())
+  animalId       String
+  animal         Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  ngoId          String
+  ngo            NGO      @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  applicantName  String
+  applicantEmail String
+  applicantPhone String
+  cityState      String
+  housingType    String   // APARTMENT | HOUSE | RURAL
+  hasOtherPets   Boolean  @default(false)
+  safeScreens    Boolean  @default(true)
+  message        String
+  status         String   @default("PENDING") // PENDING | INTERVIEW | APPROVED | REJECTED
+  reviewNotes    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  animalId  String
+  animal    Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, animalId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorName  String
+  actorRole  String
+  action     String   // e.g. "NGO_APPROVED", "NGO_SUSPENDED", "FINANCE_LEDGER_UPDATED", "ANIMAL_CREATED"
+  targetType String   // "NGO" | "ANIMAL" | "FINANCE" | "USER" | "INQUIRY"
+  targetId   String
+  details    String
+  createdAt  DateTime @default(now())
+}
