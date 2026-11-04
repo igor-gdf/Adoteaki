@@ -60,7 +60,7 @@ export default function RegisterNgoPage() {
   const [phone, setPhone] = useState('');
   const [website, setWebsite] = useState('');
   const [pixKey, setPixKey] = useState('');
-  const [password, setPassword] = useState('ong123');
+  const [password, setPassword] = useState('');
 
   // Initial Financial Setup
   const [initialBalance, setInitialBalance] = useState('18500');
@@ -407,6 +407,7 @@ export default function RegisterNgoPage() {
                 </label>
                 <input
                   type="password"
+                  minLength={8}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

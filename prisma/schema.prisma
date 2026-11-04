@@ -23,6 +23,9 @@ model User {
   inquiries    AdoptionInquiry[]
   favorites    Favorite[]
   auditLogs    AuditLog[]
+
+  @@index([role, status])
+  @@index([createdAt])
 }
 
 model NGO {
@@ -61,6 +64,8 @@ model NGO {
   animals            Animal[]
   financialEntries   FinancialEntry[]
   inquiries          AdoptionInquiry[]
+
+  @@index([status, state, city])
 }
 
 model Animal {
@@ -88,6 +93,9 @@ model Animal {
   updatedAt     DateTime          @updatedAt
   inquiries     AdoptionInquiry[]
   favorites     Favorite[]
+
+  @@index([ngoId, status])
+  @@index([species, status])
 }
 
 model FinancialEntry {
@@ -106,6 +114,9 @@ model FinancialEntry {
   notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([ngoId, month])
+  @@index([ngoId, type, category])
 }
 
 model AdoptionInquiry {
@@ -128,6 +139,10 @@ model AdoptionInquiry {
   reviewNotes    String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  @@index([ngoId, status, createdAt])
+  @@index([userId, createdAt])
+  @@index([animalId])
 }
 
 model Favorite {
@@ -152,4 +167,7 @@ model AuditLog {
   targetId   String
   details    String
   createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([actorId, createdAt])
 }

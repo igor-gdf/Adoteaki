@@ -8,8 +8,9 @@ export const dynamic = 'force-dynamic';
 export default async function NgosDirectoryPage({
   searchParams,
 }: {
-  searchParams?: { search?: string; state?: string };
+  searchParams?: Promise<{ search?: string; state?: string }>;
 }) {
+  const resolvedSearchParams = await searchParams;
   const [ngos, allAnimals] = await Promise.all([
     NgoService.listNgos({}),
     prisma.animal.findMany({
@@ -27,8 +28,8 @@ export default async function NgosDirectoryPage({
     <NgoDirectoryClient
       initialNgos={ngos}
       allAnimals={allAnimals}
-      initialSearch={searchParams?.search || ''}
-      initialState={searchParams?.state || 'ALL'}
+      initialSearch={resolvedSearchParams?.search || ''}
+      initialState={resolvedSearchParams?.state || 'ALL'}
     />
   );
 }

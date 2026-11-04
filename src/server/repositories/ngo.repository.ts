@@ -81,14 +81,6 @@ export class NgoRepository {
         financialEntries: {
           orderBy: [{ month: 'desc' }, { entryDate: 'desc' }],
         },
-        inquiries: {
-          include: {
-            animal: {
-              select: { id: true, name: true, species: true, photoUrl: true },
-            },
-          },
-          orderBy: { createdAt: 'desc' },
-        },
       },
     });
   }

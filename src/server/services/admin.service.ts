@@ -1,4 +1,5 @@
 import { prisma } from '@/server/db/client';
+import { ngoStatusSchema, userRoleSchema, userStatusSchema } from '@/lib/validators/schemas';
 
 export class AdminService {
   static async getGovernanceOverview() {
@@ -99,10 +100,20 @@ export class AdminService {
 
   static async updateNgoStatus(
     ngoId: string,
-    status: 'APPROVED' | 'PENDING' | 'SUSPENDED',
+    status: string,
     verifiedScore: number | undefined,
     actor: { id: string; name: string; role: string }
   ) {
+    if (!ngoStatusSchema.safeParse(status).success) {
+      throw new Error('Status de ONG inválido.');
+    }
+    if (
+      verifiedScore !== undefined &&
+      (!Number.isInteger(verifiedScore) || verifiedScore < 0 || verifiedScore > 100)
+    ) {
+      throw new Error('Score de verificação inválido.');
+    }
+
     const ngo = await prisma.nGO.update({
       where: { id: ngoId },
       data: {
@@ -131,6 +142,16 @@ export class AdminService {
     data: { status?: string; role?: string },
     actor: { id: string; name: string; role: string }
   ) {
+    if (data.status && !userStatusSchema.safeParse(data.status).success) {
+      throw new Error('Status de usuário inválido.');
+    }
+    if (data.role && !userRoleSchema.safeParse(data.role).success) {
+      throw new Error('Perfil de usuário inválido.');
+    }
+    if (userId === actor.id && (data.status === 'SUSPENDED' || (data.role && data.role !== 'ADMIN'))) {
+      throw new Error('Um administrador não pode remover o próprio acesso administrativo.');
+    }
+
     const user = await prisma.user.update({
       where: { id: userId },
       data: {

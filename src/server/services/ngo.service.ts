@@ -159,6 +159,10 @@ export class NgoService {
     monthlyFacility?: number;
     monthlyAdmin?: number;
   }) {
+    if (!input.password || input.password.length < 8 || input.password.length > 128) {
+      throw new Error('A senha do gestor deve ter entre 8 e 128 caracteres.');
+    }
+
     if (!isValidCnpj(input.cnpj)) {
       throw new Error('CNPJ inválido. Verifique os dígitos verificadores (padrão Receita Federal).');
     }
@@ -192,11 +196,8 @@ export class NgoService {
           state: input.state.toUpperCase(),
         },
       });
-    } else if (user.role === 'SUPPORTER') {
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: { role: 'NGO' },
-      });
+    } else if (user.role !== 'NGO') {
+      throw new Error('Este e-mail já está vinculado a um perfil incompatível.');
     }
 
     // State coordinates fallback for interactive map
@@ -217,7 +218,7 @@ export class NgoService {
     };
     const [latitude, longitude] = stateCoords[input.state.toUpperCase()] || [-23.5505, -46.6333];
 
-    const currentMonth = '2026-10';
+    const currentMonth = new Date().toISOString().slice(0, 7);
 
     const ngo = await prisma.nGO.create({
       data: {
@@ -244,7 +245,7 @@ export class NgoService {
         instagram: input.instagram || null,
         pixKey: input.pixKey || formattedCnpj,
         bankInfo: input.bankInfo || null,
-        status: 'APPROVED', // Immediately browsable in catalog while logged in audit trail
+        status: 'PENDING',
         verifiedScore: 91,
         initialBalance: Number(input.initialBalance) || 0,
         financialUpdatedAt: new Date(),

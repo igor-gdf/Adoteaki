@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AdminService } from '@/server/services/admin.service';
 import { getCurrentUser } from '@/server/auth/session';
+import { adminPatchSchema } from '@/lib/validators/schemas';
 
 export async function GET() {
   try {
+    const user = await getCurrentUser();
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Apenas Administradores do Sistema podem consultar a governança.' },
+        { status: 403 }
+      );
+    }
+
     const overview = await AdminService.getGovernanceOverview();
     return NextResponse.json(overview);
   } catch (err: unknown) {
@@ -23,9 +32,17 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { target, id, status, verifiedScore, role } = body;
+    const parsed = adminPatchSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados de governança inválidos.' }, { status: 400 });
+    }
+
+    const { target, id, status, verifiedScore, role } = parsed.data;
 
     if (target === 'NGO') {
+      if (!status) {
+        return NextResponse.json({ error: 'Status da ONG é obrigatório.' }, { status: 400 });
+      }
       const updatedNgo = await AdminService.updateNgoStatus(id, status, verifiedScore, {
         id: user.id,
         name: user.name,

@@ -1,4 +1,5 @@
 import { prisma } from '@/server/db/client';
+import { financeEntrySchema } from '@/lib/validators/schemas';
 
 export interface FinancialSummaryDTO {
   ngoId: string;
@@ -174,18 +175,21 @@ export class FinanceService {
       notes?: string;
     }
   ) {
+    const parsed = financeEntrySchema.safeParse(data);
+    if (!parsed.success) throw new Error('Dados do lançamento financeiro inválidos.');
+
     const entry = await prisma.financialEntry.create({
       data: {
         ngoId,
-        type: data.type,
-        category: data.category,
-        titlePt: data.titlePt,
-        titleEn: data.titleEn || data.titlePt,
-        amount: Number(data.amount),
-        month: data.month,
+        type: parsed.data.type,
+        category: parsed.data.category,
+        titlePt: parsed.data.titlePt,
+        titleEn: parsed.data.titleEn || parsed.data.titlePt,
+        amount: parsed.data.amount,
+        month: parsed.data.month,
         entryDate: new Date(),
-        documentRef: data.documentRef || null,
-        notes: data.notes || null,
+        documentRef: parsed.data.documentRef || null,
+        notes: parsed.data.notes || null,
       },
     });
 
@@ -229,15 +233,27 @@ export class FinanceService {
       throw new Error('Lançamento contábil não encontrado ou sem permissão.');
     }
 
+    const parsed = financeEntrySchema.safeParse({
+      type: data.type ?? existing.type,
+      category: data.category ?? existing.category,
+      titlePt: data.titlePt ?? existing.titlePt,
+      titleEn: data.titleEn ?? existing.titleEn,
+      amount: data.amount ?? existing.amount,
+      month: data.month ?? existing.month,
+      documentRef: data.documentRef ?? existing.documentRef ?? undefined,
+      notes: data.notes ?? existing.notes ?? undefined,
+    });
+    if (!parsed.success) throw new Error('Dados do lançamento financeiro inválidos.');
+
     const updated = await prisma.financialEntry.update({
       where: { id: entryId },
       data: {
-        type: data.type ?? existing.type,
-        category: data.category ?? existing.category,
-        titlePt: data.titlePt ?? existing.titlePt,
-        titleEn: data.titleEn ?? data.titlePt ?? existing.titleEn,
-        amount: data.amount !== undefined ? Number(data.amount) : existing.amount,
-        month: data.month ?? existing.month,
+        type: parsed.data.type,
+        category: parsed.data.category,
+        titlePt: parsed.data.titlePt,
+        titleEn: parsed.data.titleEn || parsed.data.titlePt,
+        amount: parsed.data.amount,
+        month: parsed.data.month,
         documentRef: data.documentRef !== undefined ? data.documentRef : existing.documentRef,
         notes: data.notes !== undefined ? data.notes : existing.notes,
       },

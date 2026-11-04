@@ -10,10 +10,14 @@ export default async function NgoDetailPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams?: { tab?: string };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ tab?: string }>;
 }) {
-  const ngo = await NgoService.getNgoDetail(params.id);
+  const [{ id }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams ?? Promise.resolve({ tab: undefined }),
+  ]);
+  const ngo = await NgoService.getNgoDetail(id);
   if (!ngo) {
     notFound();
   }
@@ -27,7 +31,7 @@ export default async function NgoDetailPage({
     <NgoDetailClient
       ngo={ngo}
       financialSummary={financialSummary}
-      initialTab={searchParams?.tab || 'overview'}
+      initialTab={resolvedSearchParams.tab || 'overview'}
     />
   );
 }

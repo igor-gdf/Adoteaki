@@ -5,7 +5,9 @@ import {
   getCurrentUser,
   hashPassword,
   setSessionCookie,
+  verifyPassword,
 } from '@/server/auth/session';
+import { authSchema } from '@/lib/validators/schemas';
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -15,10 +17,15 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { action, email, password, name, role, phone, city, state } = body;
+    const parsed = authSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados de autenticação inválidos.' }, { status: 400 });
+    }
+
+    const { action, email, password, name, role, phone, city, state } = parsed.data;
 
     if (action === 'register') {
-      if (!email || !password || !name) {
+      if (!name) {
         return NextResponse.json(
           { error: 'Nome, e-mail e senha são obrigatórios.' },
           { status: 400 }
@@ -65,7 +72,7 @@ export async function POST(req: NextRequest) {
       where: { email: email.toLowerCase().trim() },
     });
 
-    if (!user || user.passwordHash !== hashPassword(password)) {
+    if (!user || !verifyPassword(password, user.passwordHash)) {
       return NextResponse.json(
         { error: 'Credenciais inválidas. Verifique seu e-mail e senha.' },
         { status: 401 }
@@ -77,6 +84,13 @@ export async function POST(req: NextRequest) {
         { error: 'Esta conta está suspensa pela auditoria da plataforma.' },
         { status: 403 }
       );
+    }
+
+    if (!user.passwordHash.startsWith('scrypt$')) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordHash: hashPassword(password) },
+      });
     }
 
     await setSessionCookie(user.id, user.role);

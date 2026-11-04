@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { FinanceService } from '@/server/services/finance.service';
 import { getCurrentUser } from '@/server/auth/session';
 import { prisma } from '@/server/db/client';
+import {
+  financeEntrySchema,
+  financeUpdateSchema,
+  initialBalanceSchema,
+} from '@/lib/validators/schemas';
 
 async function resolveTargetNgoId(reqNgoId: string | null | undefined, user: Awaited<ReturnType<typeof getCurrentUser>>) {
   if (reqNgoId) return reqNgoId;
@@ -41,6 +46,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    const parsed = financeEntrySchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados do lançamento inválidos.' }, { status: 400 });
+    }
     const targetNgoId = user.role === 'ADMIN' ? body.ngoId || user.ngoId : user.ngoId;
     if (!targetNgoId) {
       return NextResponse.json({ error: 'ONG vinculada não identificada.' }, { status: 400 });
@@ -49,7 +58,7 @@ export async function POST(req: NextRequest) {
     const entry = await FinanceService.createEntry(
       targetNgoId,
       { id: user.id, name: user.name, role: user.role },
-      body
+      parsed.data
     );
 
     const summary = await FinanceService.getNgoFinancialSummary(targetNgoId);
@@ -74,20 +83,29 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (body.action === 'updateInitialBalance') {
+      const parsedBalance = initialBalanceSchema.safeParse(body);
+      if (!parsedBalance.success) {
+        return NextResponse.json({ error: 'Saldo inicial inválido.' }, { status: 400 });
+      }
       await FinanceService.updateInitialBalance(
         targetNgoId,
-        Number(body.initialBalance),
+        parsedBalance.data.initialBalance,
         { id: user.id, name: user.name, role: user.role }
       );
       const summary = await FinanceService.getNgoFinancialSummary(targetNgoId);
       return NextResponse.json({ summary });
     }
 
+    const parsed = financeUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados do lançamento inválidos.' }, { status: 400 });
+    }
+
     const updated = await FinanceService.updateEntry(
-      body.id,
+      parsed.data.id,
       targetNgoId,
       { id: user.id, name: user.name, role: user.role },
-      body
+      parsed.data
     );
 
     const summary = await FinanceService.getNgoFinancialSummary(targetNgoId);

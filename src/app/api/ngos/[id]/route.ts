@@ -5,11 +5,17 @@ import { getCurrentUser } from '@/server/auth/session';
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const ngo = await NgoService.getNgoDetail(params.id);
+    const user = await getCurrentUser();
+    const { id } = await params;
+    const ngo = await NgoService.getNgoDetail(id);
     if (!ngo) {
+      return NextResponse.json({ error: 'ONG não encontrada.' }, { status: 404 });
+    }
+    const canInspectPrivateNgo = user?.role === 'ADMIN' || user?.ngoId === ngo.id;
+    if (ngo.status !== 'APPROVED' && !canInspectPrivateNgo) {
       return NextResponse.json({ error: 'ONG não encontrada.' }, { status: 404 });
     }
     const financialSummary = await FinanceService.getNgoFinancialSummary(ngo.id);
@@ -22,17 +28,18 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
-    if (!user || (user.role !== 'ADMIN' && user.ngoId !== params.id)) {
+    const { id } = await params;
+    if (!user || (user.role !== 'ADMIN' && user.ngoId !== id)) {
       return NextResponse.json({ error: 'Acesso não autorizado.' }, { status: 403 });
     }
 
     const body = await req.json();
     const updated = await NgoService.updateNgoProfile(
-      params.id,
+      id,
       { id: user.id, name: user.name, role: user.role },
       body
     );

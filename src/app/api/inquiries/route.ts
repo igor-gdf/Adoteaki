@@ -7,15 +7,21 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Autenticação necessária.' }, { status: 401 });
+    }
+
     const ngoIdParam = searchParams.get('ngoId');
 
     const where: Record<string, unknown> = {};
-    if (ngoIdParam) {
-      where.ngoId = ngoIdParam;
-    } else if (user?.role === 'NGO' && user.ngoId) {
+    if (user.role === 'ADMIN') {
+      if (ngoIdParam) where.ngoId = ngoIdParam;
+    } else if (user.role === 'NGO' && user.ngoId) {
       where.ngoId = user.ngoId;
-    } else if (user?.role === 'SUPPORTER') {
+    } else if (user.role === 'SUPPORTER') {
       where.userId = user.id;
+    } else {
+      return NextResponse.json({ error: 'Perfil sem permissão.' }, { status: 403 });
     }
 
     const inquiries = await prisma.adoptionInquiry.findMany({
