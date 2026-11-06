@@ -188,7 +188,7 @@ export class NgoService {
         data: {
           email: input.email.toLowerCase(),
           name: input.responsibleName || input.tradeName,
-          passwordHash: hashPassword(input.password || 'ong123'),
+          passwordHash: hashPassword(input.password || 'ong12345'),
           role: 'NGO',
           status: 'ACTIVE',
           phone: input.phone,

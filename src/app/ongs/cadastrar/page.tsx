@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
   FileSpreadsheet,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -25,21 +24,6 @@ const BRAZIL_UFS = [
   'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
   'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
 ];
-
-function generateValidCnpj(): string {
-  const randomDigits = Array.from({ length: 8 }, () =>
-    Math.floor(Math.random() * 9)
-  );
-  const base = [...randomDigits, 0, 0, 0, 1];
-  const calc = (arr: number[], weights: number[]) => {
-    const sum = arr.reduce((acc, val, idx) => acc + val * weights[idx], 0);
-    const rem = sum % 11;
-    return rem < 2 ? 0 : 11 - rem;
-  };
-  const d1 = calc(base, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  const d2 = calc([...base, d1], [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  return formatCnpj([...base, d1, d2].join(''));
-}
 
 export default function RegisterNgoPage() {
   const { locale, refreshUser } = useApp();
@@ -234,24 +218,10 @@ export default function RegisterNgoPage() {
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1">
+                <div className="mb-1">
                   <label className="font-medium text-zinc-700 dark:text-zinc-300">
                     CNPJ (com validação Módulo-11) *
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const generated = generateValidCnpj();
-                      setCnpj(generated);
-                      if (!pixKey) setPixKey(generated);
-                    }}
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 hover:underline"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    <span>
-                      {locale === 'pt-BR' ? 'Gerar CNPJ Válido' : 'Generate Valid CNPJ'}
-                    </span>
-                  </button>
                 </div>
                 <input
                   type="text"
@@ -285,8 +255,8 @@ export default function RegisterNgoPage() {
                       </>
                     ) : (
                       locale === 'pt-BR'
-                        ? 'Digite os 14 números de um CNPJ válido ou clique em "Gerar CNPJ Válido".'
-                        : 'Enter 14 digits of a valid CNPJ or click "Generate Valid CNPJ".'
+                        ? 'Digite os 14 números de um CNPJ válido.'
+                        : 'Enter 14 digits of a valid CNPJ.'
                     )}
                   </span>
                 )}

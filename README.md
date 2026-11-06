@@ -75,7 +75,7 @@ O cabeçalho global possui um **Alternador Rápido de Perfil (1-Clique)** além 
 | Perfil | E-mail | Senha | Permissões Principais |
 | :--- | :--- | :--- | :--- |
 | **1. Administrador (`ADMIN`)** | `admin@adoteaki.org.br` | `admin123` | Aprovar/suspender ONGs, gerenciar usuários globais, auditar relatórios fiscais e inspecionar o Log de Auditoria (`/admin`). |
-| **2. Gestor de ONG (`NGO`)** | `contato@pataspaulistas.org.br` | `ong123` | CRUD em tempo real do Livro-Razão financeiro (`/dashboard/finances`), gestão do catálogo de animais, avaliação de pedidos de adoção e edição do perfil público. |
+| **2. Gestor de ONG (`NGO`)** | `ong@adoteaki.org.br` | `ong12345` | Acesso ao Livro-Razão financeiro da ONG de Proteção Animal (`/dashboard/finances`). |
 | **3. Apoiador / Público (`SUPPORTER`)** | `apoiador@adoteaki.org.br` | `apoiador123` | Busca avançada de ONGs e animais, favoritar animais, enviar pedidos de adoção e auditar balanços financeiros públicos. |
 
 ---
@@ -139,4 +139,4 @@ A aplicação estará disponível em `http://localhost:3000`.
 3. **Edição Financeira em Tempo Real (`/dashboard/finances`):**
    * Adicione, edite ou remova lançamentos de receitas/despesas ou altere o Saldo Inicial e observe os gráficos de composição, fluxo de caixa de 12 meses e aviso de última atualização recalcularem imediatamente.
 4. **Governança e Auditoria (`/admin`):**
-   * Aprove ou suspenda ONGs (como a *Proteção Serra do Curral - MG* inicialmente pendente) e confira o registro imediato na aba **Log de Auditoria da Plataforma**.
+   * Aprove ou suspenda ONGs e confira o registro imediato na aba **Log de Auditoria da Plataforma**.

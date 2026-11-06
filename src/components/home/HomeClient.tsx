@@ -63,13 +63,6 @@ export function HomeClient({ metrics, featuredAnimals, topNgos }: HomeClientProp
       <section className="border-b border-zinc-200 dark:border-zinc-800 py-12 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 mb-6 max-w-full">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
-              <span className="font-mono text-[10px] sm:text-[11px] font-semibold tracking-wider text-zinc-700 dark:text-zinc-300 leading-snug">
-                {t.hero.badge}
-              </span>
-            </div>
-
             <h1 className="font-serif font-bold text-3xl sm:text-5xl text-zinc-950 dark:text-zinc-50 tracking-tight leading-[1.12] mb-6">
               {t.hero.title}
             </h1>

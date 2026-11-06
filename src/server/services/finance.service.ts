@@ -9,6 +9,14 @@ export interface FinancialSummaryDTO {
   totalRevenue: number;
   totalExpenses: number;
   currentBalance: number;
+  indicators: {
+    cashCoverageMonths: number;
+    coverageRate: number;
+    recurringRevenuePercentage: number;
+    averageMonthlyExpense: number;
+    highestRevenueMonth: { month: string; amount: number } | null;
+    highestExpenseMonth: { month: string; amount: number } | null;
+  };
   verifiedScore: number;
   financialUpdatedAt: string;
   revenueByCategory: {
@@ -36,7 +44,10 @@ export interface FinancialSummaryDTO {
     category: string;
     titlePt: string;
     titleEn: string;
+    groupPt: string | null;
+    groupEn: string | null;
     amount: number;
+    annualPercentage: number | null;
     month: string;
     entryDate: string;
     documentRef: string | null;
@@ -133,6 +144,20 @@ export class FinanceService {
         donations: Math.round(data.donations * 100) / 100,
       }));
 
+    const currentBalance = ngo.initialBalance + totalRevenue - totalExpenses;
+    const averageMonthlyExpense = totalExpenses / 12;
+    const highestRevenueMonth = monthlySeries.reduce<typeof monthlySeries[number] | null>(
+      (highest, month) => (!highest || month.revenue > highest.revenue ? month : highest),
+      null,
+    );
+    const highestExpenseMonth = monthlySeries.reduce<typeof monthlySeries[number] | null>(
+      (highest, month) => (!highest || month.expenses > highest.expenses ? month : highest),
+      null,
+    );
+    const recurringRevenue = ngo.financialEntries
+      .filter((entry) => entry.type === 'REVENUE' && entry.groupPt === 'Doações recorrentes')
+      .reduce((sum, entry) => sum + entry.amount, 0);
+
     return {
       ngoId: ngo.id,
       tradeName: ngo.tradeName,
@@ -140,7 +165,19 @@ export class FinanceService {
       initialBalance: ngo.initialBalance,
       totalRevenue: Math.round(totalRevenue * 100) / 100,
       totalExpenses: Math.round(totalExpenses * 100) / 100,
-      currentBalance: Math.round((ngo.initialBalance + totalRevenue - totalExpenses) * 100) / 100,
+      currentBalance: Math.round(currentBalance * 100) / 100,
+      indicators: {
+        cashCoverageMonths: Math.round((currentBalance / averageMonthlyExpense) * 10) / 10,
+        coverageRate: totalExpenses > 0 ? Math.round((totalRevenue / totalExpenses) * 1000) / 10 : 0,
+        recurringRevenuePercentage: totalRevenue > 0 ? Math.round((recurringRevenue / totalRevenue) * 1000) / 10 : 0,
+        averageMonthlyExpense: Math.round(averageMonthlyExpense * 100) / 100,
+        highestRevenueMonth: highestRevenueMonth
+          ? { month: highestRevenueMonth.month, amount: highestRevenueMonth.revenue }
+          : null,
+        highestExpenseMonth: highestExpenseMonth
+          ? { month: highestExpenseMonth.month, amount: highestExpenseMonth.expenses }
+          : null,
+      },
       verifiedScore: ngo.verifiedScore,
       financialUpdatedAt: ngo.financialUpdatedAt.toISOString(),
       revenueByCategory,
@@ -152,7 +189,10 @@ export class FinanceService {
         category: e.category,
         titlePt: e.titlePt,
         titleEn: e.titleEn,
+        groupPt: e.groupPt,
+        groupEn: e.groupEn,
         amount: e.amount,
+        annualPercentage: e.annualPercentage,
         month: e.month,
         entryDate: e.entryDate.toISOString(),
         documentRef: e.documentRef,

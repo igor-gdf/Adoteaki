@@ -105,9 +105,12 @@ model FinancialEntry {
   type        String   // REVENUE | EXPENSE
   category    String   // REVENUE: DONATIONS | GRANTS | EVENTS | PARTNERSHIPS
                        // EXPENSE: VETERINARY | FOOD | FACILITY | ADMINISTRATION | RESCUE_OPS
+  groupPt     String?
+  groupEn     String?
   titlePt     String
   titleEn     String
   amount      Float
+  annualPercentage Float?
   month       String   // YYYY-MM format, e.g. "2026-10"
   entryDate   DateTime @default(now())
   documentRef String?  // Invoice/receipt ID for audit transparency

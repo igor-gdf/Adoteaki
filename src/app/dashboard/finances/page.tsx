@@ -398,13 +398,13 @@ function DashboardFinancesContent() {
               </strong>
               <span>
                 {locale === 'pt-BR'
-                  ? 'Clique no botão ao lado para entrar instantaneamente como Gestor do Instituto Patas Paulistas e testar a edição em tempo real.'
+                  ? 'Clique no botão ao lado para entrar instantaneamente como Gestor da ONG de Proteção Animal e testar a edição em tempo real.'
                   : 'Click the button to sign in immediately as NGO Manager and test real-time financial & catalog CRUD.'}
               </span>
             </div>
             <button
               type="button"
-              onClick={() => quickLoginAs('contato@pataspaulistas.org.br', 'ong123')}
+              onClick={() => quickLoginAs('ong@adoteaki.org.br', 'ong12345')}
               className="px-4 py-2 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold shrink-0"
             >
               {locale === 'pt-BR'

@@ -91,9 +91,15 @@ export function FinancialDashboard({ summary, showManageCta = true }: Props) {
             {formattedUpdatedDate}
           </strong>
           <span className="mt-1 sm:mt-0 sm:ml-2 inline-flex items-center px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 font-mono text-[11px] font-semibold">
-            Score {summary.verifiedScore}/100
+            {locale === 'pt-BR' ? 'Score de transparência' : 'Transparency score'}{' '}
+            {summary.verifiedScore}/100
           </span>
         </div>
+        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-2">
+          {locale === 'pt-BR'
+            ? 'O score vai de 0 a 100 e é atribuído pela auditoria após a conferência de documentos, CNPJ, registros e prestação de contas. O fluxo de caixa do PDF não altera esse score.'
+            : 'The score ranges from 0 to 100 and is assigned by auditors after checking documents, registration, and accountability records. The PDF cash flow does not change this score.'}
+        </p>
       </div>
 
       {/* 4 Balance Sheet Summary Cards */}
@@ -165,6 +171,22 @@ export function FinancialDashboard({ summary, showManageCta = true }: Props) {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+        {[
+          [locale === 'pt-BR' ? 'Cobertura de caixa' : 'Cash coverage', `${summary.indicators.cashCoverageMonths} ${locale === 'pt-BR' ? 'meses' : 'months'}`],
+          [locale === 'pt-BR' ? 'Taxa de cobertura' : 'Coverage rate', `${summary.indicators.coverageRate.toFixed(1)}%`],
+          [locale === 'pt-BR' ? 'Receitas recorrentes' : 'Recurring revenue', `${summary.indicators.recurringRevenuePercentage.toFixed(1)}%`],
+          [locale === 'pt-BR' ? 'Despesa média mensal' : 'Average monthly expense', formatCurrencyBRL(summary.indicators.averageMonthlyExpense, locale)],
+          [locale === 'pt-BR' ? 'Maior entrada' : 'Highest revenue', summary.indicators.highestRevenueMonth?.month ?? '-'],
+          [locale === 'pt-BR' ? 'Maior saída' : 'Highest expense', summary.indicators.highestExpenseMonth?.month ?? '-'],
+        ].map(([label, value]) => (
+          <div key={label} className="border-l-2 border-amber-400 pl-3 py-2">
+            <div className="font-mono uppercase text-[10px] text-zinc-500 dark:text-zinc-400">{label}</div>
+            <div className="font-semibold text-zinc-900 dark:text-zinc-100 mt-1">{value}</div>
+          </div>
+        ))}
       </div>
 
       {/* Breakdown Charts: Revenue Sources & Operating Expenses */}
